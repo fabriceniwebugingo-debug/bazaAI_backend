@@ -1,0 +1,40 @@
+# 🌈 Super Friendly ASR & TTS Requirements
+
+# Core FastAPI (for super friendly web interface)
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-dotenv>=1.0.0
+
+# Database (for storing happy user interactions)
+psycopg2-binary>=2.9.0
+
+# 🎙️ Friendly Speech Recognition
+whisper>=1.1.0
+SpeechRecognition>=3.10.0
+
+# 🔊 Friendly Text-to-Speech
+pyttsx3>=2.90
+
+# 🎵 Audio Processing
+soundfile>=0.12.0
+librosa>=0.10.0
+
+# 🤖 Machine Learning Support
+torch>=2.0.0
+torchaudio>=2.0.0
+
+# 🛡️ Security & Rate Limiting
+slowapi>=0.1.9
+
+# 📊 Data Processing
+pydantic>=2.0.0
+python-multipart>=0.0.6
+
+# 🌈 Friendly Utilities
+pathlib2>=2.3.7
+tempfile
+base64
+
+# Optional: For enhanced friendliness
+# emoji>=2.8.0  # For extra friendly messages
+# colorama>=0.4.0  # For colorful console output

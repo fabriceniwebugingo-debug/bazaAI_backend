@@ -1,0 +1,168 @@
+# Kinyarwanda Vocabulary for Enhanced ASR
+# Add one word per line, lowercase
+
+# Basic greetings
+murakoze
+muraho
+mwaramutse
+mwiriwe
+bite
+mbega
+yego
+oya
+murabeho
+ndabashimiye
+
+# Common verbs
+gura
+erekana
+ohereza
+koherereza
+tanga
+shaka
+nkeneye
+nifuza
+ndashaka
+dufasha
+kubona
+kugira
+kugira
+kuvuga
+kumva
+
+# Telecom specific
+amafaranga
+airtime
+konti
+data
+minuta
+sms
+ubutumwa
+bundles
+ibiciro
+ubwoko
+guhitamo
+
+# Numbers and quantities
+rimwe
+imbiri
+ine
+kane
+gatanu
+gatandatu
+karindwi
+umunani
+icyenda
+cumi
+mirongo
+ibihumbi
+
+# Time and periods
+none
+ejo
+kuri
+buri munsi
+icyumweru
+ukwezi
+amasaha
+umunota
+umunota
+
+# Question words
+ni iki
+ni uwuhe
+nki
+bite
+ubuhe
+bake
+
+# Connectors and prepositions
+na
+na
+kuri
+ku
+muri
+mu
+kwa
+bya
+ya
+y' 
+n'
+
+# Descriptive words
+byinshi
+bike
+bikomeye
+biza
+heza
+gusoma
+gukora
+kwinshi
+
+# Money and transactions
+frw
+rwf
+amafaranga
+kugura
+kugurisha
+kohereza
+gutanga
+
+# Technical terms
+interineti
+intaneti
+web
+application
+system
+account
+balance
+password
+username
+email
+
+# Common expressions
+ntakibanza
+sawa
+nibyo
+yego
+oya
+wowe
+twe
+mwe
+buri
+wese
+
+# Additional common words
+umwuga
+ubuzima
+ubutabera
+ubukungu
+amahirwe
+amakuru
+amateka
+inama
+ibigwi
+imigabane
+
+# Code-mixing common
+show
+buy
+get
+need
+want
+help
+please
+thank
+sorry
+yes
+no
+ok
+good
+bad
+price
+cost
+free
+now
+today
+tomorrow
+yesterday

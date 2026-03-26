@@ -2,3 +2,15 @@ fastapi
 uvicorn[standard]
 psycopg2-binary
 python-dotenv
+fastapi
+uvicorn
+psycopg2-binary
+python-dotenv
+redis
+fasttext
+langdetect
+whisper
+nltk
+sumy
+sentry-sdk
+slowapi

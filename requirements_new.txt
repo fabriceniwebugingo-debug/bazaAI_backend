@@ -1,0 +1,32 @@
+fastapi
+uvicorn[standard]
+psycopg2-binary
+python-dotenv
+redis
+fasttext
+langdetect
+whisper
+nltk
+sumy
+sentry-sdk
+slowapi
+# Additional ASR dependencies for Kinyarwanda support
+SpeechRecognition>=3.10.0
+torch>=2.0.0
+torchaudio>=2.0.0
+# For trained Kinyarwanda models
+transformers>=4.30.0
+datasets>=2.12.0
+accelerate>=0.20.0
+# For training pipeline
+librosa>=0.10.0
+soundfile>=0.12.0
+pandas>=1.5.0
+numpy>=1.24.0
+# For evaluation
+jiwer>=3.0.0
+# For data processing
+tqdm>=4.64.0
+# Optional: for advanced training
+wandb>=0.15.0
+tensorboard>=2.13.0

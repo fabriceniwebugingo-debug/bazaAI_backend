@@ -1,0 +1,20 @@
+[
+  {
+    "audio": "audio_files/placeholder_001.wav",
+    "text": "murakoze bite mbega ndashaka kuri gura data bundles",
+    "duration": 5.2,
+    "language": "mixed"
+  },
+  {
+    "audio": "audio_files/placeholder_002.wav",
+    "text": "mwaramutse nshaka kureka balance yanjye",
+    "duration": 3.8,
+    "language": "kin"
+  },
+  {
+    "audio": "audio_files/placeholder_003.wav",
+    "text": "please show me my account balance",
+    "duration": 4.5,
+    "language": "en"
+  }
+]
