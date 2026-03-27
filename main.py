@@ -383,25 +383,27 @@ def get_kinyarwanda_trained_model(model_name: str = None):
 
 
 def get_whisper_model(model_size="base"):
-
     """Get Whisper model with caching for different sizes"""
-
     global whisper_models
 
     if model_size not in whisper_models:
-
         try:
-
+            logger.info(f"Loading Whisper model '{model_size}' - this may take a moment...")
             whisper_models[model_size] = whisper.load_model(model_size)
-
             logger.info(f"Whisper model '{model_size}' loaded successfully")
-
         except Exception as e:
-
             logger.error(f"Failed to load Whisper model '{model_size}': {e}")
-
-            raise
-
+            # Fallback to tiny model if base fails
+            if model_size != "tiny":
+                logger.info("Attempting fallback to tiny model...")
+                try:
+                    whisper_models[model_size] = whisper.load_model("tiny")
+                    logger.info("Fallback tiny model loaded successfully")
+                except Exception as fallback_error:
+                    logger.error(f"Failed to load fallback model: {fallback_error}")
+                    raise HTTPException(status_code=500, detail="Voice transcription unavailable - model loading failed")
+            else:
+                raise HTTPException(status_code=500, detail="Voice transcription unavailable - model loading failed")
     return whisper_models[model_size]
 
 
@@ -6414,6 +6416,41 @@ async def debug_echo(request: Request):
 # ---------------------------
 # ENHANCED ENDPOINT: Voice Transcription - English Only
 # ---------------------------
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for deployment monitoring"""
+    try:
+        # Test database connection
+        conn = get_db_connection()
+        conn.close()
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {str(e)}"
+    
+    # Check Whisper model availability
+    try:
+        # Try to load tiny model (smallest, fastest)
+        model = get_whisper_model("tiny")
+        whisper_status = "ready"
+    except Exception as e:
+        whisper_status = f"error: {str(e)}"
+    
+    return {
+        "status": "healthy",
+        "timestamp": datetime.utcnow().isoformat(),
+        "services": {
+            "database": db_status,
+            "whisper": whisper_status,
+            "environment": os.getenv("ENVIRONMENT", "development")
+        },
+        "endpoints": {
+            "chat": "/chat",
+            "transcribe": "/transcribe",
+            "health": "/health",
+            "docs": "/docs"
+        }
+    }
 
 @app.post("/transcribe")
 @limiter.limit("10/minute")
