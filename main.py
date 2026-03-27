@@ -6376,6 +6376,64 @@ def payment_webhook(payload: dict, background_tasks: BackgroundTasks):
 
 
 
+@app.post("/transcribe/simple")
+@limiter.limit("10/minute")
+async def transcribe_audio_simple(
+    phone: str = Form(...),
+    audio: UploadFile = File(...),
+    request: Request = None
+):
+    """Simple transcription endpoint for debugging"""
+    logger.info(f"Simple transcription request: phone={phone}, filename={audio.filename}")
+    
+    tmp_path = None
+    try:
+        # Create temporary file
+        ext = os.path.splitext(audio.filename)[1].lower()
+        if ext not in {'.m4a', '.mp3', '.wav', '.ogg', '.flac', '.webm'}:
+            raise HTTPException(status_code=400, detail="Invalid audio format")
+        
+        with tempfile.NamedTemporaryFile(delete=False, suffix=ext) as tmp:
+            content = await audio.read()
+            logger.info(f"Audio file received: {len(content)} bytes")
+            
+            if len(content) < 100:
+                return {"error": "Audio file too small", "text": "", "size": len(content)}
+            
+            tmp.write(content)
+            tmp_path = tmp.name
+            logger.info(f"Audio file saved: {tmp_path}")
+        
+        # Use tiny model for faster processing
+        logger.info("Loading tiny Whisper model...")
+        model = get_whisper_model("tiny")
+        
+        # Simple transcription
+        logger.info("Starting simple transcription...")
+        result = model.transcribe(tmp_path, language="en", fp16=False)
+        
+        transcribed_text = result["text"].strip()
+        logger.info(f"Transcription result: '{transcribed_text}'")
+        
+        return {
+            "text": transcribed_text,
+            "detected_language": result.get("language", "en"),
+            "model_used": "whisper_tiny",
+            "confidence": 0.8,
+            "size": len(content)
+        }
+        
+    except Exception as e:
+        logger.exception("Simple transcription failed")
+        return {"error": str(e), "text": "", "model_used": "none"}
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            try:
+                os.unlink(tmp_path)
+                logger.info("Cleaned up temporary file")
+            except Exception as e:
+                logger.error(f"Failed to cleanup: {e}")
+
 @app.post("/transcribe/test")
 @limiter.limit("10/minute")
 async def test_transcription(request: Request):
@@ -6580,6 +6638,7 @@ async def transcribe_audio(
             logger.info(f"Final text after cleanup: {final_text}")
         
         # English-only transcription with telecom-specific context
+        logger.info(f"Starting transcription with model: {model_size}")
         model = get_whisper_model(model_size)
         whisper_lang = "en"
         
@@ -6597,6 +6656,7 @@ async def transcribe_audio(
         best_of = 5  # More attempts for better accuracy
         beam_size = 7  # Wider beam search
         
+        logger.info(f"Transcribing audio file: {tmp_path}")
         result = model.transcribe(
             tmp_path,
             language=whisper_lang,
@@ -6611,10 +6671,11 @@ async def transcribe_audio(
         transcribed_text = result["text"].strip()
         detected_lang = result.get("language", "en")
         
-        logger.info(f"English transcription completed: {transcribed_text[:100]}...")
+        logger.info(f"English transcription completed: '{transcribed_text}' (detected: {detected_lang})")
         
         # Add intent detection for better understanding
         intent_result = detect_voice_intent(transcribed_text)
+        logger.info(f"Voice intent: {intent_result['intent']} (confidence: {intent_result['confidence']})")
         
         return {
             "text": transcribed_text,
