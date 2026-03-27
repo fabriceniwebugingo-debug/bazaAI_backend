@@ -539,12 +539,19 @@ else:
 # ---------------------------
 
 class ChatRequest(BaseModel):
-
-    phone: str = Field(..., description="User phone number")
-
-    message: str = Field(..., description="User message / query")
-
-
+    phone: Optional[str] = Field(None, description="User phone number")
+    message: Optional[str] = Field(None, description="User message / query")
+    # Support alternative field names for compatibility
+    userId: Optional[str] = Field(None, description="Alternative user ID (maps to phone)")
+    text: Optional[str] = Field(None, description="Alternative message text (maps to message)")
+    
+    def get_phone(self) -> str:
+        """Get phone number from either 'phone' or 'userId' field"""
+        return self.phone or self.userId or ""
+    
+    def get_message(self) -> str:
+        """Get message from either 'message' or 'text' field"""
+        return self.message or self.text or ""
 
 
 
@@ -5203,18 +5210,11 @@ def get_recommendations(phone: str, request: Request, limit: int = 6):
             )
 
     return {"recommendations": recommendations}
-
-
-
-
-
 @app.post("/chat")
 # @limiter.limit("30/minute")  # Temporarily disabled to debug
 def chat(req: ChatRequest, request: Request):
-
-    phone = normalize_phone(req.phone or "")
-
-    message = req.message or ""
+    phone = normalize_phone(req.get_phone())
+    message = req.get_message()
 
     logger.info("Incoming chat from %s: %s", phone, message)
 
